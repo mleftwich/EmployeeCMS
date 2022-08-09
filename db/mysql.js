@@ -7,8 +7,8 @@ function connect() {
         host: 'localhost',
         password: 'root',
         user: 'root',
-        database: 'employees_db'
-        
+        database: 'employees_db',
+        multipleStatements: true,
     })
 }
 
