@@ -13,7 +13,7 @@ CREATE TABLE `employees_db`.`department` (
 /* create role table */
 CREATE TABLE `employees_db`.`role` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(30) NULL,
+  `title` VARCHAR(30) NOT NULL,
   `salary` DECIMAL NOT NULL,
   `department_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
@@ -21,7 +21,7 @@ CREATE TABLE `employees_db`.`role` (
   CONSTRAINT `fk_role_1`
     FOREIGN KEY (`department_id`)
     REFERENCES `employees_db`.`department` (`id`)
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 /* create employee table */
@@ -36,7 +36,7 @@ CREATE TABLE `employees_db`.`employee` (
   CONSTRAINT `fk_employee_1`
     FOREIGN KEY (`role_id`)
     REFERENCES `employees_db`.`role` (`id`)
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 

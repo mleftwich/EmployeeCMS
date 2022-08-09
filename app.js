@@ -1,6 +1,8 @@
 // IMPORT INQUIERER NPM
 const inquirer = require("inquirer");
-const { getDept } = require("./modules/department");
+const { getDept, addDept, getDeptId } = require("./modules/department");
+const { addRole, getRoles } = require("./modules/roles");
+
 
 // FUNCTION TO PROMPT USER ON ACTION
 function start() {
@@ -21,12 +23,34 @@ function start() {
           "Exit",
         ],
       },
+      // PROMPT USER FOR DEPARTMENT INFO
       {
         message: 'What is the department name?',
         type: 'input',
-        name: 'dept-name',
+        name: 'deptname',
         when: (res) => res.action === 'Add a department',
-      }
+      },
+      // PROMPT USER FOR ROLE INFO
+      {
+        message: 'What is the Role?',
+        type: 'input',
+        name: 'rolename',
+        when: (res) => res.action === 'Add a role',
+      },
+      {
+        message: 'What is the salary for this Role?',
+        type: 'input',
+        name: 'rolesal',
+        when: (res) => res.action === 'Add a role',
+      },
+      {
+        message: 'What department does this Role belong to?',
+        type: 'list',
+        name: 'roledept',
+        choices: async function listDepts() {
+          const depts = await getDept(); return depts },
+        when: (res) => res.action === 'Add a role',
+      },
     ])
     .then(async (res) => {
       // DEFINE ACTION FROM USER INPUT AND PERFORM TASK
@@ -40,6 +64,8 @@ function start() {
       
     // if user chooses view all roles display roles
         case "View all roles":
+          const roles = await getRoles();
+          console.table(roles);
           break;
       
     // if user chooses view all employees display employees
@@ -48,12 +74,19 @@ function start() {
       
     // if users chooses, add dept 
         case "Add a department":
-            const department = await getDept(department);
+        const deptname = res.deptname;
+        await addDept(deptname);
           break;
       
     // if user chooses, add role
         case "Add a role":
-          break;
+          const roletitle = res.rolename;
+          const rolesal = res.rolesal;
+          const roledept = res.roledept; 
+          let depts = await getDeptId(roledept)
+          console.log(depts.length)
+          await addRole(roletitle, rolesal, depts);
+        break;
       
     // if user chooses, add employee
         case "Add an employee":
@@ -76,4 +109,5 @@ function start() {
 
 
 // INITIALIZE FUNCTION
+
 start();
