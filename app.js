@@ -1,7 +1,8 @@
 // IMPORT INQUIERER NPM
 const inquirer = require("inquirer");
 const { getDept, addDept, getDeptId } = require("./modules/department");
-const { addRole, getRoles, getRoleTitle } = require("./modules/roles");
+const { addEmployee, getEmployees } = require("./modules/employees");
+const { addRole, getRoles, getRoleTitle, getRoleId } = require("./modules/roles");
 
 // FUNCTION TO PROMPT USER ON ACTION
 function start() {
@@ -98,7 +99,10 @@ function start() {
 
         // if user chooses view all employees display employees
         case "View all employees":
-          break;
+          const allDepts = await getEmployees()
+          console.table(allDepts)
+
+        break;
 
         // if users chooses, add dept
         case "Add a department":
@@ -118,7 +122,14 @@ function start() {
 
         // if user chooses, add employee
         case "Add an employee":
-          break;
+          const first = res.firstname
+          const last = res.lastname
+          const role = await getRoleId(res.emprole)
+          const manager = res.manager
+          let iRole = role[0]
+        
+          await addEmployee(first, last, iRole[0].id, manager);
+        break;
 
         // if user chooses, update employee role
         case "Update an employee role":

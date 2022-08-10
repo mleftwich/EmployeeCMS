@@ -25,8 +25,17 @@ async function getRoleTitle() {
   const roles = await db.query("SELECT * FROM employees_db.role");
   let newRole = roles[0]
   return newRole
- 
-  }
+ }
+
+ async function getRoleId(id) {
+  const db = await connect();
+  const name = id;
+  const roleId = await db.query(
+    "SELECT id FROM role WHERE title = ?",
+    name
+  );
+  return roleId;
+}
   
 
 // EXPORT BOTH GET/ADD ROLE FUNCTIONS
@@ -34,4 +43,5 @@ module.exports = {
   addRole,
   getRoles,
   getRoleTitle,
+  getRoleId,
 };
