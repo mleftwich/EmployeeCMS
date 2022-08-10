@@ -1,7 +1,7 @@
 // IMPORT INQUIERER NPM
 const inquirer = require("inquirer");
 const { getDept, addDept, getDeptId } = require("./modules/department");
-const { addRole, getRoles } = require("./modules/roles");
+const { addRole, getRoles, getRoleTitle } = require("./modules/roles");
 
 // FUNCTION TO PROMPT USER ON ACTION
 function start() {
@@ -51,6 +51,34 @@ function start() {
           return depts;
         },
         when: (res) => res.action === "Add a role",
+      },
+      //PROMPT USER FOR EMPLOYEE INJURY
+      {
+        message: "Employees first name??",
+        type: "input",
+        name: "firstname",
+        when: (res) => res.action === "Add an employee",
+      },
+      {
+        message: "Employees last name?",
+        type: "input",
+        name: "lastname",
+        when: (res) => res.action === "Add an employee",
+      },
+      {
+        message: "What is the employees role?",
+        type: "list",
+        name: "emprole",
+        choices: async function listRole() {
+          const role = await getRoleTitle();
+          let roles = [];
+          for (let index = 0; index < role.length; index++) {
+            let list = role[index].title;
+            roles.push(list);
+          }
+          return roles;
+        },
+        when: (res) => res.action === "Add an employee",
       },
     ])
     .then(async (res) => {

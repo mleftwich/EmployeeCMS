@@ -19,8 +19,19 @@ async function getRoles() {
   return roles;
 }
 
+// FUNCTION TO RETURN ROLE TITLES
+async function getRoleTitle() {
+  const db = await connect();
+  const roles = await db.query("SELECT * FROM employees_db.role");
+  let newRole = roles[0]
+  return newRole
+ 
+  }
+  
+
 // EXPORT BOTH GET/ADD ROLE FUNCTIONS
 module.exports = {
   addRole,
   getRoles,
+  getRoleTitle,
 };
