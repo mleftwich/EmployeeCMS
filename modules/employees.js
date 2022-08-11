@@ -14,7 +14,7 @@ async function addEmployee(first, last, role, manager) {
 // FUNCTION TO RETURN ALL EMPLOYEES
 async function getEmployees() {
   const db = await connect();
-  const [employees] = await db.query("SELECT * FROM employee");
+  const [employees] = await db.query("SELECT DISTINCT e.first_name, e.last_name, r.title as role, d.name as department, r.salary, e.manager_id FROM employee e JOIN role r ON e.role_id = r.id INNER JOIN department d ON r.department_id = d.id");
   return employees;
 }
 
@@ -45,21 +45,23 @@ async function getManagerId(id) {
 async function updateRole(id, role) {
   const db = await connect();
   const name = id;
-  console.log(id)
   const empIdArray = await db.query(
     "SELECT id FROM employee WHERE first_name = ?",
     name
+   
   );
   
   let empId1 = empIdArray[0];
-  let empId = empIdArray[0].id;
+  let empId = empId1[0].id;
   let roleId = role[0].id;
-  console.log(roleId)
+ 
+  console.log(empId)
+  let sql = `UPDATE employee SET role_id = ? WHERE id =?`;
+  const data = [roleId, empId]
   const update = await db.query(
-    "UPDATE employee SET role_id = ?",
-    roleId,
-    ("WHERE id = ?", empId)
+   sql, data,
   );
+  console.log(update)
   return update;
 }
 

@@ -217,7 +217,7 @@ function start() {
           const roleArray = await getRoleId(newrole);
           const iNewRole = roleArray[0]
           await updateRole(emp, iNewRole)
-
+          
           break;
 
         // exit the application
