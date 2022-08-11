@@ -1,8 +1,18 @@
 // IMPORT INQUIERER NPM
 const inquirer = require("inquirer");
 const { getDept, addDept, getDeptId } = require("./modules/department");
-const { addEmployee, getEmployees } = require("./modules/employees");
-const { addRole, getRoles, getRoleTitle, getRoleId } = require("./modules/roles");
+const {
+  addEmployee,
+  getEmployees,
+  getManagerId,
+  getManager,
+} = require("./modules/employees");
+const {
+  addRole,
+  getRoles,
+  getRoleTitle,
+  getRoleId,
+} = require("./modules/roles");
 
 // FUNCTION TO PROMPT USER ON ACTION
 function start() {
@@ -53,7 +63,7 @@ function start() {
         },
         when: (res) => res.action === "Add a role",
       },
-      //PROMPT USER FOR EMPLOYEE INJURY
+      //PROMPT USER FOR EMPLOYEE INFO
       {
         message: "Employees first name??",
         type: "input",
@@ -66,6 +76,7 @@ function start() {
         name: "lastname",
         when: (res) => res.action === "Add an employee",
       },
+
       {
         message: "What is the employees role?",
         type: "list",
@@ -80,6 +91,27 @@ function start() {
           return roles;
         },
         when: (res) => res.action === "Add an employee",
+      },
+      {
+        message: "Does this employee have a manager?",
+        type: "confirm",
+        name: "ismanaged",
+        when: (res) => res.action === "Add an employee",
+      },
+      {
+        message: "Who is the employees manager?",
+        type: "list",
+        name: "manager",
+        choices: async function listManagers() {
+          const manager = await getManager();
+          let managers = [];
+          for (let index = 0; index < manager.length; index++) {
+            let list = manager[index].first_name;
+            managers.push(list);
+          }
+          return managers;
+        },
+        when: (res) => res.ismanaged,
       },
     ])
     .then(async (res) => {
@@ -99,10 +131,10 @@ function start() {
 
         // if user chooses view all employees display employees
         case "View all employees":
-          const allDepts = await getEmployees()
-          console.table(allDepts)
+          const allDepts = await getEmployees();
+          console.table(allDepts);
 
-        break;
+          break;
 
         // if users chooses, add dept
         case "Add a department":
@@ -122,14 +154,20 @@ function start() {
 
         // if user chooses, add employee
         case "Add an employee":
-          const first = res.firstname
-          const last = res.lastname
-          const role = await getRoleId(res.emprole)
-          const manager = res.manager
-          let iRole = role[0]
-        
-          await addEmployee(first, last, iRole[0].id, manager);
-        break;
+          const first = res.firstname;
+          const last = res.lastname;
+          const role = await getRoleId(res.emprole);
+          const manager = await getManagerId(res.manager);
+          let iRole = role[0];
+
+          if (manager === 0) {
+            await addEmployee(first, last, iRole[0].id);
+          } else {
+            let iManager = manager[0].id;
+            await addEmployee(first, last, iRole[0].id, iManager);
+            console.log(iManager)
+          }
+          break;
 
         // if user chooses, update employee role
         case "Update an employee role":
