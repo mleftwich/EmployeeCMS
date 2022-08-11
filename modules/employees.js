@@ -11,13 +11,6 @@ async function addEmployee(first, last, role, manager) {
   );
 }
 
-//FUNCTION TO RETURN JUST EMPLOYEE NAMES
-async function getEmployeeName() {
-  const db = await connect();
-  const [employee] = await db.query("SELECT first_name FROM employee");
-  return employee;
-}
-
 // FUNCTION TO RETURN ALL EMPLOYEES
 async function getEmployees() {
   const db = await connect();
@@ -26,33 +19,55 @@ async function getEmployees() {
 }
 
 // FUNCTION TO GET LIST OF NAMES FOR MANAGER
-async function getManager() {
+async function getEmployeeNames() {
   const db = await connect();
-  const managers = await db.query("SELECT first_name FROM employee");
-  let managerName = managers[0]
-  return managerName
- }
+  const employees = await db.query("SELECT first_name FROM employee");
+  let employeeNames = employees[0];
+  return employeeNames;
+}
 
- // FUNCTION TO GET MANAGER ID
+// FUNCTION TO GET MANAGER ID
 async function getManagerId(id) {
   if (!id) {
-    return '0';
+    return "0";
   } else {
+    const db = await connect();
+    const name = id;
+    const managerId = await db.query(
+      "SELECT id FROM employee WHERE first_name = ?",
+      name
+    );
+    return managerId[0];
+  }
+}
+
+// FUNCTION TO UPDATE ROLE
+async function updateRole(id, role) {
   const db = await connect();
   const name = id;
-  const managerId = await db.query(
+  console.log(id)
+  const empIdArray = await db.query(
     "SELECT id FROM employee WHERE first_name = ?",
     name
   );
-  return managerId[0];
+  
+  let empId1 = empIdArray[0];
+  let empId = empIdArray[0].id;
+  let roleId = role[0].id;
+  console.log(roleId)
+  const update = await db.query(
+    "UPDATE employee SET role_id = ?",
+    roleId,
+    ("WHERE id = ?", empId)
+  );
+  return update;
 }
-}
-
 
 // EXPORT BOTH GET/ADD EMPLOYEES FUNCTIONS
 module.exports = {
   addEmployee,
   getEmployees,
   getManagerId,
-  getManager,
+  getEmployeeNames,
+  updateRole,
 };
