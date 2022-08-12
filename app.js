@@ -1,12 +1,13 @@
 // IMPORT INQUIERER NPM
 const inquirer = require("inquirer");
+const math = require('mathjs')
 const { getDept, addDept, getDeptId } = require("./modules/department");
 const {
   addEmployee,
   getEmployees,
   getManagerId,
-getEmployeeNames,
-updateRole,
+  getEmployeeNames,
+  updateRole,
 } = require("./modules/employees");
 const {
   addRole,
@@ -14,7 +15,9 @@ const {
   getRoleTitle,
   getRoleId,
 } = require("./modules/roles");
-
+const { 
+  getSals 
+} = require("./modules/budget");
 // FUNCTION TO PROMPT USER ON ACTION
 function start() {
   return inquirer
@@ -31,11 +34,11 @@ function start() {
           "Add a role",
           "Add an employee",
           "Update an employee role",
+          "View Budget",
           "Exit",
         ],
       },
-     
-     
+
       // PROMPT USER FOR DEPARTMENT INFO
       {
         message: "What is the department name?",
@@ -43,8 +46,7 @@ function start() {
         name: "deptname",
         when: (res) => res.action === "Add a department",
       },
-      
-      
+
       // PROMPT USER FOR ROLE INFO
       {
         message: "What is the Role?",
@@ -68,8 +70,7 @@ function start() {
         },
         when: (res) => res.action === "Add a role",
       },
-      
-      
+
       //PROMPT USER FOR EMPLOYEE INFO
       {
         message: "Employees first name??",
@@ -120,8 +121,7 @@ function start() {
         },
         when: (res) => res.ismanaged,
       },
-      
-      
+
       // PROMPTS FOR UPDATING EMPLOYEE
       {
         message: "Which employee?",
@@ -155,7 +155,6 @@ function start() {
       },
     ])
     .then(async (res) => {
-      
       // DEFINE ACTION FROM USER INPUT AND PERFORM TASK
       switch (res.action) {
         // if user chooses view all departments display departments
@@ -206,18 +205,31 @@ function start() {
           } else {
             let iManager = manager[0].id;
             await addEmployee(first, last, iRole[0].id, iManager);
-            console.log(iManager)
+            console.log(iManager);
           }
           break;
 
         // if user chooses, update employee role
         case "Update an employee role":
           const emp = res.update;
-          const newrole = res.newrole
+          const newrole = res.newrole;
           const roleArray = await getRoleId(newrole);
-          const iNewRole = roleArray[0]
-          await updateRole(emp, iNewRole)
-          
+          const iNewRole = roleArray[0];
+          await updateRole(emp, iNewRole);
+
+          break;
+
+
+          // view budget
+          case "View Budget":
+          let salArray = [] 
+          const salaries = await getSals();
+           for (let index = 0; index < salaries.length; index++) {
+            const sals = salaries[index];
+            salArray.push(sals.salary)
+           }
+          let sum = math.sum(salArray)
+          console.log('The total budget is:', '$' + sum)
           break;
 
         // exit the application

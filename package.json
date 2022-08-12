@@ -12,6 +12,7 @@
   "dependencies": {
     "faker": "^6.6.6",
     "inquirer": "^8.0.2",
+    "mathjs": "^11.0.1",
     "mysql2": "^2.3.3"
   },
   "devDependencies": {
