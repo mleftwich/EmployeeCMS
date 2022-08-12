@@ -1,6 +1,6 @@
 // IMPORT INQUIERER NPM
 const inquirer = require("inquirer");
-const math = require('mathjs')
+const math = require("mathjs");
 const { getDept, addDept, getDeptId } = require("./modules/department");
 const {
   addEmployee,
@@ -15,9 +15,7 @@ const {
   getRoleTitle,
   getRoleId,
 } = require("./modules/roles");
-const { 
-  getSals 
-} = require("./modules/budget");
+const { getSals } = require("./modules/budget");
 // FUNCTION TO PROMPT USER ON ACTION
 function start() {
   return inquirer
@@ -180,6 +178,7 @@ function start() {
         case "Add a department":
           const deptname = res.deptname;
           await addDept(deptname);
+          console.log("Success!");
           break;
 
         // if user chooses, add role
@@ -189,7 +188,7 @@ function start() {
           const roledept = res.roledept;
           const depts = await getDeptId(roledept);
           await addRole(roletitle, rolesal, depts[0]);
-
+          console.log("Success!");
           break;
 
         // if user chooses, add employee
@@ -205,8 +204,8 @@ function start() {
           } else {
             let iManager = manager[0].id;
             await addEmployee(first, last, iRole[0].id, iManager);
-            console.log(iManager);
           }
+          console.log("Success!");
           break;
 
         // if user chooses, update employee role
@@ -216,20 +215,19 @@ function start() {
           const roleArray = await getRoleId(newrole);
           const iNewRole = roleArray[0];
           await updateRole(emp, iNewRole);
-
+          console.log("Success!");
           break;
 
-
-          // view budget
-          case "View Budget":
-          let salArray = [] 
+        // view budget
+        case "View Budget":
+          let salArray = [];
           const salaries = await getSals();
-           for (let index = 0; index < salaries.length; index++) {
+          for (let index = 0; index < salaries.length; index++) {
             const sals = salaries[index];
-            salArray.push(sals.salary)
-           }
-          let sum = math.sum(salArray)
-          console.log('The total budget is:', '$' + sum)
+            salArray.push(sals.salary);
+          }
+          let sum = math.sum(salArray);
+          console.log("The total budget is:", "$" + sum);
           break;
 
         // exit the application
@@ -243,6 +241,6 @@ function start() {
     });
 }
 
-// INITIALIZE FUNCTION
+// INITIALIZE
 
 start();

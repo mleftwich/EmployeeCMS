@@ -17,6 +17,7 @@ async function getDept() {
   return departments;
 }
 
+// FUNCTION TO RETURN DEPARTMENT ID
 async function getDeptId(id) {
   const db = await connect();
   const name = id;
