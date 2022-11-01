@@ -4,6 +4,7 @@
   
   ## Table of Contents
   * [Description](#description)
+  * [Technologies](#technologies)
   * [Installation](#installation)
   * [Usage](#usage)
   * [Contributing](#contributing)
@@ -19,8 +20,13 @@
 
   ![screenshot](./assets/imgs/screenshot.png)
 
+  ## Technologies
+  * JavaScript
+  * node.js
+  * MySQL
+
   ## Installation
-   Clone the repository, install node and npm run start
+   Clone the repository, npm install and npm run start
 
 
   ## Usage
@@ -36,7 +42,7 @@
 
 
   ## Tests
-   
+   Tests run in development
 
 
   ## License
